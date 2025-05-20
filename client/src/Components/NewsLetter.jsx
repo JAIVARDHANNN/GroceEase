@@ -23,4 +23,3 @@ const NewsLetter = () => {
 
 export default NewsLetter;
 
-//2:14:00
