@@ -2,9 +2,9 @@ import React from 'react'
 import { useAppContext } from '../Context/AppContext'
 import { useParams } from 'react-router-dom';
 import { categories } from '../assets/assets';
+import ProductCard from '../Components/ProductCard';
 
 const ProductCategory = () => {
-
     const {products} = useAppContext();
     const {category} = useParams();
 
@@ -27,7 +27,9 @@ const ProductCategory = () => {
             ))}
           </div>
         ): (
-            <div></div>
+            <div className='flex items-center justify-center h-[60vh]'>
+              <p className='text-2xl font-medium text-primary'>No Products found in this category.</p>
+            </div>
         )}
 
     </div>
