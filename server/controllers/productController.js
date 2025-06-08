@@ -3,7 +3,7 @@ import Product from "../models/Product.js";
 //App Product: /api/product/add
 export const addProduct =  async(req , res)=>{
     try {
-        let productData = JSON.parse( req.body.productData)
+        let productData = JSON.parse(req.body.productData)
 
         const images = req.files
 
@@ -16,10 +16,10 @@ export const addProduct =  async(req , res)=>{
 
         await Product.create({...productData , image : imagesUrl})
 
-        res.json({success:true , message : "Product Added"})
+       return res.json({success:true , message : "Product Added"})
     } catch (error) {
             console.log(error.message)
-            res.json({success:false , message : error.message})
+          return res.json({success:false , message : error.message})
     }
 }
 

@@ -17,12 +17,26 @@ export const AppContextProvider = ({children})=>{
 
     const navigate = useNavigate();
     const [user , setUser] = useState(null);
-    const [isSeller , setIsSeller] = useState(false);    
+    const [isSeller , setIsSeller] = useState(true);    
     const [showUserLogin , setShowUserLogin] = useState(false); 
     const [ products  , setProducts] = useState([]); 
 
     const [ cartItems  , setCartItems] = useState({}); 
     const [ searchQuery  , setSearchQuery] = useState({}); 
+
+    //Fetch Seller Status
+    const fetchSeller = async()=>{
+        try {
+            const {data} = await axios.get('/api/seller/is-auth');
+            if(data.success){
+                setIsSeller(true)
+            }else{
+                setIsSeller(false)
+            }
+        } catch (error) {
+             setIsSeller(false)
+        }
+    }
 
     // Fetch all objects
     const fetchProducts = async () => {
@@ -89,7 +103,8 @@ export const AppContextProvider = ({children})=>{
 
 
     useEffect(()=>{
-        fetchProducts()
+        fetchSeller();
+        fetchProducts();
     } ,[])
 
     const value ={navigate , user , setUser , setIsSeller , isSeller ,
