@@ -4,10 +4,10 @@ import jwt from 'jsonwebtoken'
 export const sellerLogin = async (req , res)=>{
 
    try {
-         const{email , passwrod} = req.body;
+         const{email , password} = req.body;
 
-        if(passwrod === process.env.SELLER_PASSWORD && email === process.env.SELLER_EMAIL ){
-        const token = jwt.sign({email} , process.env.JWT_SECRET, {expiresIn: '7d'});
+        if( email === process.env.SELLER_EMAIL && password === process.env.SELLER_PASSWORD  ){
+            const token = jwt.sign({email} , process.env.JWT_SECRET, {expiresIn: '7d'});
 
           res.cookie('sellerToken' ,token , {
                 httpOnly : true, 
@@ -19,7 +19,7 @@ export const sellerLogin = async (req , res)=>{
         return res.json({success:true , message: "Logged In"});
         }else {
 
-             return res.json({success:false , message: "Invalid Credentials"});
+            return res.json({success:false , message: "Invalid Credentials"});
     }
    } catch (error) {
         console.log(error.message);
