@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useDebugValue } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {dummyProducts} from "../assets/assets";
@@ -16,7 +16,7 @@ export const AppContextProvider = ({children})=>{
     const currency = import.meta.env.VITE_CURRENCY;
 
     const navigate = useNavigate();
-    const [user , setUser] = useState(null);
+    const [user , setUser] = useState();
     const [isSeller , setIsSeller] = useState(true);    
     const [showUserLogin , setShowUserLogin] = useState(false); 
     const [ products  , setProducts] = useState([]); 
@@ -36,11 +36,35 @@ export const AppContextProvider = ({children})=>{
         } catch (error) {
              setIsSeller(false)
         }
+    }   
+
+    //Fetch User Auth Status, User Data and Cart Items
+
+    const fetchUser = async()=>{
+        try {
+            const {data } = await axios.get('/api/user/is-auth')
+            if(data.success){
+                setUser(data.user)
+                setCartItems(data.user.cartItems)
+            }
+        } catch (error) {
+            setUser(null);   
+        }
     }
 
-    // Fetch all objects
+    // Fetch all Products
     const fetchProducts = async () => {
-        setProducts(dummyProducts); 
+        try {
+            const {data} = await axios.get('/api/product/list')
+            if(data.success){
+                setProducts(data.products)
+            }
+            else{
+                toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
     }
     // Add product to cart
     const addToCart = (itemId) =>{
@@ -105,11 +129,29 @@ export const AppContextProvider = ({children})=>{
     useEffect(()=>{
         fetchSeller();
         fetchProducts();
+        fetchUser();
     } ,[])
 
+    //update Database Cart Items
+    useEffect(()=>{ 
+        const updateCart = async()=>{
+            try {
+                const {data} = await axios.post('/api/cart/update', {cartItems})
+                if(!data.success){
+                    toast.error(data.message)
+                }
+            } catch (error) {
+                toast.error(error.message)
+            }
+        }
+        if(user){
+            updateCart()
+        }
+        //9:11 around
+    }, [cartItems])
     const value ={navigate , user , setUser , setIsSeller , isSeller ,
         showUserLogin , setShowUserLogin , products  , currency , addToCart , updateCartItem , removeFromCart ,
-        cartItems , searchQuery , setSearchQuery , getCartAmount , getCartCount , axios
+        cartItems , searchQuery , setSearchQuery , getCartAmount , getCartCount , axios , fetchProducts
     }
         return <AppContext.Provider value={value}>
             {children}
