@@ -147,7 +147,7 @@ export const AppContextProvider = ({children})=>{
         if(user){
             updateCart()
         }
-        //9:11 around
+     
     }, [cartItems])
     const value ={navigate , user , setUser , setIsSeller , isSeller ,
         showUserLogin , setShowUserLogin , products  , currency , addToCart , updateCartItem , removeFromCart ,
