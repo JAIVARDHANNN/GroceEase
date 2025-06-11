@@ -18,7 +18,7 @@ await connectDB();
 await connectCloudinary();
 
 //Allow multiple origins
-const allowedOrigins = ['http://localhost:5173'] //this is basically a list of allowed domains and links to acccess the bacnend localhost:400 for fetching data
+const allowedOrigins = ['http://localhost:5173' , 'https://groce-ease-ten.vercel.app'] //this is basically a list of allowed domains and links to acccess the bacnend localhost:400 for fetching data
 
 //Middleware Configuration
 app.use(express.json());
