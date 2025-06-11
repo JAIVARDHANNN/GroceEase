@@ -2,34 +2,49 @@ import Product from "../models/Product.js"
 import Order from "../models/Order.js"
 //Place Order COD  : /api/order/cod
 
-export const placeOrderCOD = async(req , res)=>{
-        try {
-            const {userId , items , address} = req.body;
-            if(!address || items.lemgth() === 0){
-                return res.json({success:false , message: "Invalid Data"})
-            }
+export const placeOrderCOD = async (req, res) => {
+  try {
+    const userId = req.user.id; // ✅ get userId from token
+    const { items, address } = req.body;
 
-            //calculate the amount using items
-            let amount = await items.reduce(async (acc , item)=>{
-                    const produt =await Product.findById(item.produt);
-                    return (await acc) + produt.offerPrice * item.quantity;
-            } , 0)
+    if (!address || !items || items.length === 0) {
+      return res.json({ success: false, message: "Invalid Data" });
+    }
 
-            //add tax charge 2%
-            amount += Math.floor(amount *  0.02);
+    const products = await Promise.all(
+      items.map(item => Product.findById(item.product))
+    );
 
-            await Order.create({
-                userId,
-                items,
-                amount,
-                address,
-                paymentType: "COD"
-            });
-            return res.json({success:true , message:"Order Place Successfully"})
-        } catch (error) {
-            return res.json({success:false , message:error.message})
-        }
-}
+    let amount = 0;
+
+    for (let i = 0; i < items.length; i++) {
+      const product = products[i];
+      const quantity = items[i].quantity;
+
+      if (!product) {
+        return res.json({ success: false, message: `Product not found: ${items[i].product}` });
+      }
+
+      amount += product.offerPrice * quantity;
+    }
+
+    amount += Math.floor(amount * 0.02);
+
+    await Order.create({
+      userId,
+      items,
+      amount,
+      address,
+      paymentType: "COD"
+    });
+
+    return res.json({ success: true, message: "Order Placed Successfully" });
+
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
+
 
 //Get order by user id: /api/order/user
 export const getUserOrders = async()=>{
