@@ -4,7 +4,8 @@ import Order from "../models/Order.js"
 
 export const placeOrderCOD = async (req, res) => {
   try {
-    const userId = req.user.id; // ✅ get userId from token
+    const userId = req.userId; 
+
     const { items, address } = req.body;
 
     if (!address || !items || items.length === 0) {
