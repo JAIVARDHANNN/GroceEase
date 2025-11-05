@@ -2,3 +2,6 @@ node_modules/
 .env
 dist/
 *.log
+#Admin Credentials
+SELLER_EMAIL = "admin@example.com"
+SELLER_PASSWORD = "jai123"
