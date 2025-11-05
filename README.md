@@ -5,3 +5,4 @@ GroceEase is a fully functional real-time full-stack grocery shopping web applic
 The deployed project link - https://groce-ease-ten.vercel.app/
 
 The Seller Login link - https://groce-ease-ten.vercel.app/seller
+You can get the seller credentials in .gitignore file (for review)
